@@ -1,0 +1,20 @@
+       
+  gcloud config set project bamboo-archery-350015
+  
+  gcloud auth login  ##or 
+
+  gcloud auth activate-service-account ACCOUNT --key-file=key.json
+
+  gcloud auth configure-docker
+    
+  gcloud config set compute/zone asia-southeast1-a
+  
+  gcloud container clusters create kmatch-cluster --num-nodes=1 --region --zone
+
+  kubectl create namespace staging
+
+  kubectl --kubeconfig=kmatch-cluster.yaml apply -f deployment.yaml --namespace=kmatch-staging
+
+  kubectl --kubeconfig=kmatch-cluster.yaml apply -f service.yaml --namespace=kmatch-staging
+
+  kubectl --kubeconfig=kmatch-cluster.yaml apply -f ingress.yaml --namespace=kmatch-staging

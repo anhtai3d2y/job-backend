@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kmatch-backend-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: kmatch-backend-ip
+    networking.gke.io/managed-certificates: kmatch-cert
+    kubernetes.io/ingress.class: "gce"
+  labels:
+    app: kmatch-backend-service
+spec:
+  defaultBackend:
+    service:
+      name: kmatch-backend-service
+      port:
+        number: 80
