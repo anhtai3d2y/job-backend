@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CareersService } from './careers.service';
 import { CreateCareerDto } from './dto/create-career.dto';
 import { UpdateCareerDto } from './dto/update-career.dto';
 
+@ApiTags('careers')
 @Controller('careers')
 export class CareersController {
   constructor(private readonly careersService: CareersService) {}
@@ -22,7 +32,7 @@ export class CareersController {
     return this.careersService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateCareerDto: UpdateCareerDto) {
     return this.careersService.update(+id, updateCareerDto);
   }

@@ -22,6 +22,13 @@ async function bootstrap() {
     .addTag('user')
     .addTag('permission')
     .addTag('group-permission')
+    .addTag('profiles')
+    .addTag('careers')
+    .addTag('career-details')
+    .addTag('recruiters')
+    .addTag('jobs')
+    .addTag('applications')
+    .addTag('save-jobs')
 
     .addBearerAuth()
     .build();
