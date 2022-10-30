@@ -7,24 +7,16 @@ import { UserModule } from './users/user.module';
 import { UserController } from './users/user.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HeaderMiddleware } from 'common/middlewares/headers.middleware';
-import { PaypalModule } from './paypal/paypal.module';
-import { ThreadsModule } from './threads/threads.module';
-import { MessagesModule } from './messages/messages.module';
 import { PermissionModule } from './permission/permission.module';
 import { GroupPermissionModule } from './group-permission/group-permission.module';
-import { MatchesModule } from './matches/matches.module';
-import { LikeUsersModule } from './like-users/like-users.module';
-import { DislikeUsersModule } from './dislike-users/dislike-users.module';
+import { VerificationModule } from './verification/verification.module';
+
 import { ChatGateway } from './chat.gateway';
-import { SuperlikeUsersModule } from './superlike-users/superlike-users.module';
-import { SuperlikeStarModule } from './superlike-star/superlike-star.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AllExceptionsFilter } from 'common/filters/all-exception.filter';
 import { TransformInterceptor } from 'common/interceptors/transform.interceptor';
 import { Premission1Module } from './premission1/premission1.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { VerificationModule } from './verification/verification.module';
-import { BootsModule } from './boots/boots.module';
 
 @Module({
   imports: [
@@ -42,20 +34,11 @@ import { BootsModule } from './boots/boots.module';
       }),
     }),
     AuthModule,
-    UserModule,
-    PaypalModule,
-    ThreadsModule,
-    MessagesModule,
-    PermissionModule,
-    GroupPermissionModule,
-    MatchesModule,
-    LikeUsersModule,
-    DislikeUsersModule,
-    SuperlikeUsersModule,
-    SuperlikeStarModule,
-    Premission1Module,
     VerificationModule,
-    BootsModule,
+    UserModule,
+    PermissionModule,
+    Premission1Module,
+    GroupPermissionModule,
   ],
   controllers: [AppController, UserController],
   providers: [

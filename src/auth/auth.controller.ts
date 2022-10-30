@@ -104,20 +104,20 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Add new user' })
-  @ApiConsumes('multipart/form-data')
+  // @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: AddUserDto,
     required: true,
     description: 'Add new user',
   })
-  @UseInterceptors(FileInterceptor('avatar'))
+  // @UseInterceptors(FileInterceptor('avatar'))
   @Post('signup')
   async createUser(
-    @UploadedFile() file: Express.Multer.File,
+    // @UploadedFile() file: Express.Multer.File,
     @Body() user: AddUserDto,
   ): Promise<Response> {
     try {
-      const data: any = await this.userService.createUser(user, file);
+      const data: any = await this.userService.createUser(user);
       return {
         statusCode: HttpStatus.OK,
         message: 'Create successfully',

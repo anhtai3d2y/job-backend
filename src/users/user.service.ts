@@ -27,6 +27,8 @@ import { Boots } from 'src/boots/interfaces/boots.interfaces';
 import { Role } from 'utils/constants/enum/role.enum';
 import { filter } from 'rxjs';
 import { Cron } from '@nestjs/schedule';
+import axios from 'axios';
+import uuidService from 'utils/constants/enum/uuidEndpoint';
 
 export class UserService {
   constructor(
@@ -263,47 +265,45 @@ export class UserService {
     return this.pagingService.controlPaging(users, paging);
   }
 
-  async createUser(payload: any, file: any) {
-    const fileName = `./images/${uuid()}.png`;
-    await fs.createWriteStream(fileName).write(file.buffer);
-    const fileUploaded = await uploadFile(fileName);
-    fs.unlink(fileName, (err) => {
-      if (err) console.log('err: ', err);
-    });
-    const salt = await Bcrypt.genSalt(10);
-    const password = await Bcrypt.hash(payload.password, salt);
+  async createUser(payload: any) {
+    // const fileName = `./images/${uuid()}.png`;
+    // await fs.createWriteStream(fileName).write(file.buffer);
+    // const fileUploaded = await uploadFile(fileName);
+    // fs.unlink(fileName, (err) => {
+    //   if (err) console.log('err: ', err);
+    // });
+    const uuidRes = await axios
+      .post(uuidService.create, {
+        account: payload.email,
+        hash: payload.password,
+      })
+      .then(
+        (response) => {
+          return response.data;
+        },
+        (error) => {
+          console.log(error);
+        },
+      );
+    if (uuidRes.error) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.CONFLICT,
+          message: uuidRes.message,
+          error: 'Conflict',
+        },
+        409,
+      );
+    }
     const user = await this.userModel.create({
       ...payload,
-      password,
-      role: Role.KmatchBasic,
-      avatar: {
-        publicId: fileUploaded.public_id,
-        secureURL: fileUploaded.secure_url,
-      },
-      genderShow: 'Both',
-      minAge: 16,
-      maxAge: 30,
-      distance: 100,
-      mylocation: {
-        latitude: parseFloat(payload.latitude),
-        longitude: parseFloat(payload.longitude),
-      },
-      boots: Date.now(),
+      uuid: uuidRes.data.userInfo.id,
     });
     const emailPassword = {
       email: payload.email,
       password: payload.password,
     };
     await this.sendEmail.sendUserPass(emailPassword);
-    user.password = null;
-    await this.superlikeStarModel.create({
-      userId: user._id.toString(),
-      amount: 0,
-    });
-    await this.bootsModel.create({
-      userId: user._id.toString(),
-      amount: 0,
-    });
     return user;
   }
 
@@ -588,7 +588,7 @@ export class UserService {
     let plusUsers = await this.userModel.aggregate([
       {
         $match: {
-          role: Role.KmatchPlus,
+          role: Role.Candidate,
         },
       },
       {
@@ -609,7 +609,7 @@ export class UserService {
     let goldUsers = await this.userModel.aggregate([
       {
         $match: {
-          role: Role.KmatchGold,
+          role: Role.Candidate,
         },
       },
       {
@@ -630,7 +630,7 @@ export class UserService {
     let platinumUsers = await this.userModel.aggregate([
       {
         $match: {
-          role: Role.KmatchPlatinum,
+          role: Role.Candidate,
         },
       },
       {
@@ -657,7 +657,7 @@ export class UserService {
     let plusUsers = await this.userModel.aggregate([
       {
         $match: {
-          role: Role.KmatchPlus,
+          role: Role.Candidate,
         },
       },
       {
@@ -681,7 +681,7 @@ export class UserService {
     let goldUsers = await this.userModel.aggregate([
       {
         $match: {
-          role: Role.KmatchGold,
+          role: Role.Candidate,
         },
       },
       {
@@ -705,7 +705,7 @@ export class UserService {
     let platinumUsers = await this.userModel.aggregate([
       {
         $match: {
-          role: Role.KmatchPlatinum,
+          role: Role.Candidate,
         },
       },
       {
@@ -733,7 +733,7 @@ export class UserService {
     let platinumUsers = await this.userModel.aggregate([
       {
         $match: {
-          role: Role.KmatchPlatinum,
+          role: Role.Candidate,
         },
       },
       {

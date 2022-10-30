@@ -14,7 +14,7 @@ async function bootstrap() {
         : ['debug', 'error', 'log', 'verbose', 'warn'],
   });
   const config = new DocumentBuilder()
-    .setTitle('Kmatch backend')
+    .setTitle('Job finder backend')
     .setDescription('The kmatch API ')
     .setVersion('1.0')
     .addTag('auth')
@@ -22,15 +22,6 @@ async function bootstrap() {
     .addTag('user')
     .addTag('permission')
     .addTag('group-permission')
-    .addTag('like-users')
-    .addTag('dislike-users')
-    .addTag('superlike-users')
-    .addTag('superlike-star')
-    .addTag('boots')
-    .addTag('matches')
-    .addTag('threads')
-    .addTag('messages')
-    .addTag('paypal')
 
     .addBearerAuth()
     .build();

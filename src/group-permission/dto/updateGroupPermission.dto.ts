@@ -11,14 +11,14 @@ export class UpdateGroupPermissionDto {
     type: String,
     description: 'role',
     enum: Role,
-    default: Role.KmatchBasic,
+    default: Role.Candidate,
   })
   role: string;
 
   @ApiProperty({
     type: String,
     description: 'additional',
-    example: `This is the role for ${Role.KmatchBasic} package.`,
+    example: `This is the role for ${Role.Candidate} package.`,
   })
   additional: string;
 
