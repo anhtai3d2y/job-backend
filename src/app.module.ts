@@ -17,6 +17,13 @@ import { AllExceptionsFilter } from 'common/filters/all-exception.filter';
 import { TransformInterceptor } from 'common/interceptors/transform.interceptor';
 import { Premission1Module } from './premission1/premission1.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ProfilesModule } from './profiles/profiles.module';
+import { CareersModule } from './careers/careers.module';
+import { CareerDetailsModule } from './career-details/career-details.module';
+import { RecruitersModule } from './recruiters/recruiters.module';
+import { JobsModule } from './jobs/jobs.module';
+import { ApplicationsModule } from './applications/applications.module';
+import { SaveJobsModule } from './save-jobs/save-jobs.module';
 
 @Module({
   imports: [
@@ -39,6 +46,13 @@ import { ScheduleModule } from '@nestjs/schedule';
     PermissionModule,
     Premission1Module,
     GroupPermissionModule,
+    ProfilesModule,
+    CareersModule,
+    CareerDetailsModule,
+    RecruitersModule,
+    JobsModule,
+    ApplicationsModule,
+    SaveJobsModule,
   ],
   controllers: [AppController, UserController],
   providers: [
