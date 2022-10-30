@@ -245,6 +245,29 @@ export class UserService {
     // fs.unlink(fileName, (err) => {
     //   if (err) console.log('err: ', err);
     // });
+    const checkUuid = await axios
+      .post(uuidService.create, {
+        account: payload.email,
+        hash: payload.password,
+      })
+      .then(
+        (response) => {
+          return response.data;
+        },
+        (error) => {
+          console.log(error);
+        },
+      );
+    if (checkUuid.error) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.CONFLICT,
+          message: checkUuid.message,
+          error: 'Conflict',
+        },
+        409,
+      );
+    }
     const uuidRes = await axios
       .post(uuidService.create, {
         account: payload.email,
