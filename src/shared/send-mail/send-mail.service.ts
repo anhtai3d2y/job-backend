@@ -3,6 +3,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { randomInt } from 'crypto';
 import { MessageErrorService } from '../../message-error/message-error';
 import * as Bcrypt from 'bcryptjs';
+import axios from 'axios';
+import uuidService from 'utils/constants/enum/uuidEndpoint';
 
 @Injectable()
 export class SendMailService {
@@ -137,14 +139,30 @@ export class SendMailService {
         Date.now() <= data.verification.timeOut
       ) {
         if (resetPass.newPassword === resetPass.confirmNewPassword) {
-          const newPass = await Bcrypt.hash(
-            resetPass.newPassword,
-            await Bcrypt.genSalt(),
-          );
-          return data.updateOne(
-            { password: newPass, $unset: { verification: '' } },
-            { new: true },
-          );
+          const uuidRes = await axios
+            .post(uuidService.password, {
+              account: resetPass.email,
+              hash: resetPass.newPassword,
+            })
+            .then(
+              (response) => {
+                return response.data;
+              },
+              (error) => {
+                console.log(error);
+              },
+            );
+          if (uuidRes.error) {
+            throw new HttpException(
+              {
+                statusCode: HttpStatus.UNAUTHORIZED,
+                message: 'Wrong Acount or Password. Please try again!',
+                error: 'ValidatorError',
+              },
+              400,
+            );
+          }
+          return uuidRes.data;
         } else {
           return await this.messageError.messagePassNotConflictFoundService();
         }
