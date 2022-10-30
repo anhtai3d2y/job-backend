@@ -76,7 +76,6 @@ export class UserService {
     const users = await this.userModel.aggregate([
       {
         $project: {
-          password: 0,
           currentHashedRefreshToken: 0,
         },
       },
@@ -93,36 +92,10 @@ export class UserService {
       },
       {
         $project: {
-          password: 0,
           currentHashedRefreshToken: 0,
         },
       },
     ]);
-    users[0].boots = user.boots - Date.now() < 0 ? 0 : user.boots - Date.now();
-    const userStar = await this.superlikeStarModel.findOne({
-      userId: user._id,
-    });
-    const userBoots = await this.bootsModel.findOne({
-      userId: user._id,
-    });
-    if (userStar) {
-      users[0].starAmount = userStar.amount;
-    } else {
-      await this.superlikeStarModel.create({
-        userId: user._id,
-        amount: 0,
-      });
-      users[0].starAmount = 0;
-    }
-    if (userBoots) {
-      users[0].bootsAmount = userBoots.amount;
-    } else {
-      await this.bootsModel.create({
-        userId: user._id,
-        amount: 0,
-      });
-      users[0].bootsAmount = 0;
-    }
     users[0].age = calculateAge(users[0].birthday);
     return users;
   }
