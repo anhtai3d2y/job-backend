@@ -2,9 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../users/user.service';
-import { Model } from 'mongoose';
-import { User } from 'src/users/interfaces/user.interfaces';
-import * as Bcrypt from 'bcryptjs';
 import { LoginRequestDto } from './interfaces/login.interface';
 import { ChangePassDto } from 'src/shared/send-mail/dto/change-pass.dto';
 import { SendMailService } from 'src/shared/send-mail/send-mail.service';
@@ -100,7 +97,7 @@ export class AuthService {
 
   async sendCodeVerification(verification: ForgotPasswordDto) {
     const data = await this.userService.findOne(verification.email);
-    return await this.sendEmail.sendCodeVerification(data);
+    return await this.sendEmail.sendCodeVerification(data.email);
   }
 
   async sendCodeVerificationForgotPassword(forgotPassword: ForgotPasswordDto) {
