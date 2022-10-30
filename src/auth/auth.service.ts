@@ -10,6 +10,8 @@ import { ChangePassDto } from 'src/shared/send-mail/dto/change-pass.dto';
 import { SendMailService } from 'src/shared/send-mail/send-mail.service';
 import { ForgotPasswordDto } from 'src/shared/send-mail/dto/fogot-pass.dto';
 import { ResetPasswordDto } from 'src/shared/send-mail/dto/reset-pass.dto';
+import axios from 'axios';
+import uuidService from 'utils/constants/enum/uuidEndpoint';
 @Injectable()
 export class AuthService {
   constructor(
@@ -40,59 +42,60 @@ export class AuthService {
   }
 
   async login(payload: LoginRequestDto) {
-    const user = await this.userService.findOne(payload.email);
-    if (user) {
-      const passwordCheck = await Bcrypt.compare(
-        payload.password,
-        user.password,
+    const uuidRes = await axios
+      .post(uuidService.login, {
+        account: payload.email,
+        hash: payload.password,
+      })
+      .then(
+        (response) => {
+          return response.data;
+        },
+        (error) => {
+          console.log(error);
+        },
       );
-      if (passwordCheck) {
-        const payloadAccess = {
-          email: user.email,
-          userId: user._id,
-          name: user.name,
-          role: user.role,
-          type: 'accessToken',
-        };
-        const payloadRefresh = {
-          email: user.email,
-          userId: user._id,
-          name: user.name,
-          role: user.role,
-          type: 'refreshToken',
-        };
-
-        const accessToken = await this.getJwtAccessToken(payloadAccess);
-        const refreshToken = await this.getJwtRefreshToken(payloadRefresh);
-
-        await this.userService.setCurrentRefreshToken(refreshToken, user._id);
-
-        user.password = null;
-        return {
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          data: user,
-        };
-      } else {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.UNAUTHORIZED,
-            message: 'Wrong Password. Please try again!',
-            error: 'ValidatorError',
-          },
-          400,
-        );
-      }
-    } else {
+    if (uuidRes.error) {
       throw new HttpException(
         {
           statusCode: HttpStatus.UNAUTHORIZED,
-          message: 'Login email not found. Please register!',
+          message: 'Wrong Acount or Password. Please try again!',
           error: 'ValidatorError',
         },
         400,
       );
     }
+    const user = await this.userService.findOne(uuidRes.data.userInfo.account);
+    const payloadAccess = {
+      email: user.email,
+      userId: user._id,
+      uuid: user.uuid,
+      name: user.name,
+      role: user.role,
+      gender: user.gender,
+      phonenumber: user.phonenumber,
+      type: 'accessToken',
+    };
+    const payloadRefresh = {
+      email: user.email,
+      userId: user._id,
+      uuid: user.uuid,
+      name: user.name,
+      role: user.role,
+      gender: user.gender,
+      phonenumber: user.phonenumber,
+      type: 'refreshToken',
+    };
+
+    const accessToken = await this.getJwtAccessToken(payloadAccess);
+    const refreshToken = await this.getJwtRefreshToken(payloadRefresh);
+
+    await this.userService.setCurrentRefreshToken(refreshToken, user._id);
+    return {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      data: user,
+    };
   }
 
   async sendCodeVerification(verification: ForgotPasswordDto) {
