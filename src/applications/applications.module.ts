@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import { ApplicationsController } from './applications.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { applicationsSchema } from './schemas/save-jobs.schema';
+import { applicationsSchema } from './schemas/applications.schema';
 import { MessageErrorModule } from 'src/message-error/message-error.module';
 
 @Module({
