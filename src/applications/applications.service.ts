@@ -15,6 +15,7 @@ export class ApplicationsService {
     const application = await this.applicationsModel.create({
       uuid: user.uuid,
       jobId: createApplicationDto.jobId,
+      status: 'processing',
     });
     return application;
   }

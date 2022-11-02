@@ -1,0 +1,25 @@
+import * as mongoose from 'mongoose';
+export const jobsSchema = new mongoose.Schema(
+  {
+    minSalary: Number,
+    maxSalary: Number,
+    currency: String,
+    salaryFrequency: String,
+    recruiterId: String,
+    recruitAmount: Number,
+    jobName: String,
+    jobType: String,
+    gender: String,
+    minAge: Number,
+    maxAge: Number,
+    englishLevel: String,
+    experience: String,
+    otherRequirements: String,
+    contactInfo: String,
+    region: String,
+    workAddress: String,
+    careerId: String,
+    careerDetailId: String,
+  },
+  { timestamps: true, versionKey: false },
+);

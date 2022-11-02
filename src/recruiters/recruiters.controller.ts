@@ -9,14 +9,18 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpStatus,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { RecruitersService } from './recruiters.service';
 import { CreateRecruiterDto } from './dto/create-recruiter.dto';
 import { UpdateRecruiterDto } from './dto/update-recruiter.dto';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'utils/response';
 import { MessageErrorService } from 'src/message-error/message-error';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'common/guard/roles.guard';
 
 @ApiTags('recruiters')
 @Controller('recruiters')
@@ -26,6 +30,8 @@ export class RecruitersController {
     private readonly messageError: MessageErrorService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: CreateRecruiterDto,
@@ -37,11 +43,13 @@ export class RecruitersController {
   async create(
     @Body() createRecruiterDto: CreateRecruiterDto,
     @UploadedFile() file: Express.Multer.File,
+    @Request() req,
   ): Promise<Response> {
     try {
       const data: any = await this.recruitersService.create(
         createRecruiterDto,
         file,
+        req.user,
       );
       return {
         statusCode: HttpStatus.OK,

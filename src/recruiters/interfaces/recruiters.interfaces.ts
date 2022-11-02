@@ -1,6 +1,6 @@
 export interface Recruiters extends Document {
   _id: string;
-  userId: string;
+  uuid: string;
   name: string;
   career: string;
   image: {

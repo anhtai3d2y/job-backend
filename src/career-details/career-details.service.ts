@@ -14,12 +14,14 @@ export class CareerDetailsService {
   async create(createCareerDetailDto: CreateCareerDetailDto) {
     const careerDetail = await this.careerDetailsModel.create({
       name: createCareerDetailDto.name,
+      careerId: createCareerDetailDto.careerId,
     });
     return careerDetail;
   }
 
   async findAll() {
     const careerDetail = await this.careerDetailsModel.find();
+    console.log('careerDetail: ', careerDetail);
     return careerDetail;
   }
 

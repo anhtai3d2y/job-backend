@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RecruitersService } from './recruiters.service';
 import { RecruitersController } from './recruiters.controller';
-import { recruitersSchema } from './schemas/applications.schema';
+import { recruitersSchema } from './schemas/recruiters.schema';
 import { MessageErrorModule } from 'src/message-error/message-error.module';
 import { MongooseModule } from '@nestjs/mongoose';
 

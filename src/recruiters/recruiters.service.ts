@@ -14,7 +14,7 @@ export class RecruitersService {
     @InjectModel('Recruiters')
     private readonly recruiterModel: Model<Recruiters>,
   ) {}
-  async create(createRecruiterDto: CreateRecruiterDto, file: any) {
+  async create(createRecruiterDto: CreateRecruiterDto, file: any, user: any) {
     const fileName = `./images/${uuid()}.png`;
     await fs.createWriteStream(fileName).write(file.buffer);
     const fileUploaded = await uploadFile(fileName);
@@ -22,7 +22,7 @@ export class RecruitersService {
       if (err) console.log('err: ', err);
     });
     const recruiter = await this.recruiterModel.create({
-      userId: createRecruiterDto.userId,
+      uuid: user.uuid,
       name: createRecruiterDto.name,
       career: createRecruiterDto.career,
       image: {

@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 export const recruitersSchema = new mongoose.Schema(
   {
-    userId: String,
+    uuid: String,
     name: String,
     career: String,
     image: {

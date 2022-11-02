@@ -4,16 +4,6 @@ import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateRecruiterDto {
   @IsNotEmpty()
   @IsString()
-  @IsMongoId()
-  @ApiProperty({
-    type: String,
-    example: '635e5860ec443385bd4a2339',
-    description: 'User Id',
-  })
-  userId: string;
-
-  @IsNotEmpty()
-  @IsString()
   @ApiProperty({
     type: String,
     example: 'Google',
