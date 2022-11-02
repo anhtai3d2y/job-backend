@@ -1,15 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateCareerDto } from './dto/create-career.dto';
 import { UpdateCareerDto } from './dto/update-career.dto';
+import { Careers } from './interfaces/careers.interfaces';
 
 @Injectable()
 export class CareersService {
-  create(createCareerDto: CreateCareerDto) {
-    return 'This action adds a new career';
+  constructor(
+    @InjectModel('Careers')
+    private readonly careersModel: Model<Careers>,
+  ) {}
+  async create(createCareerDto: CreateCareerDto) {
+    const career = await this.careersModel.create({
+      name: createCareerDto.name,
+    });
+    return career;
   }
 
-  findAll() {
-    return `This action returns all careers`;
+  async findAll() {
+    const career = await this.careersModel.find();
+    return career;
   }
 
   findOne(id: number) {
@@ -20,7 +31,9 @@ export class CareersService {
     return `This action updates a #${id} career`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} career`;
+  async remove(id: string) {
+    return await this.careersModel.deleteOne({
+      _id: id,
+    });
   }
 }
