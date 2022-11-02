@@ -22,7 +22,7 @@ export class RegistrationRequestDto {
     example: 'Pham Duy Tai',
     description: 'Your name',
   })
-  name: String;
+  name: string;
 
   @IsNotEmpty()
   @IsEmail()
