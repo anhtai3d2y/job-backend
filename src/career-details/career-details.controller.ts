@@ -19,8 +19,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'common/guard/roles.guard';
 import { Response } from 'utils/response';
 
-@ApiTags('careerDetails')
-@Controller('careerDetails')
+@ApiTags('career-details')
+@Controller('career-details')
 export class CareerDetailsController {
   constructor(
     private readonly careerDetailsService: CareerDetailsService,
@@ -29,11 +29,11 @@ export class CareerDetailsController {
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Add new careerDetail' })
+  @ApiOperation({ summary: 'Add new career detail' })
   @ApiBody({
     type: CreateCareerDetailDto,
     required: true,
-    description: 'Add new careerDetail',
+    description: 'Add new career detail',
   })
   @Post()
   async create(
@@ -55,7 +55,7 @@ export class CareerDetailsController {
   }
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get all careerDetail' })
+  @ApiOperation({ summary: 'Get all career detail' })
   @Get()
   async findAll(@Request() req): Promise<Response> {
     try {
@@ -85,7 +85,7 @@ export class CareerDetailsController {
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Delete careerDetail' })
+  @ApiOperation({ summary: 'Delete career detail' })
   @Delete(':id')
   async remove(@Param('id') id: string, @Request() req): Promise<Response> {
     try {
