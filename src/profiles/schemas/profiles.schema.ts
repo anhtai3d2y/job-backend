@@ -1,0 +1,26 @@
+import * as mongoose from 'mongoose';
+export const profilesSchema = new mongoose.Schema(
+  {
+    uuid: String,
+    weight: Number,
+    height: Number,
+    experience: String,
+    highSchoolName: String,
+    householderName: String,
+    IDNo: String,
+    hobby: String,
+    character: String,
+    hometown: String,
+    educationLevel: String,
+    wish: String,
+    careerDetailId: String,
+    specialCondition: String,
+    wage: Number,
+    currency: String,
+    salaryFrequency: String,
+    region: String,
+    currentAddress: String,
+    workingCompany: String,
+  },
+  { timestamps: true, versionKey: false },
+);

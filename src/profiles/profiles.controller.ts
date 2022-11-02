@@ -5,21 +5,54 @@ import {
   Body,
   Put,
   Param,
+  Request,
   Delete,
+  UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { MessageErrorService } from 'src/message-error/message-error';
+import { RolesGuard } from 'common/guard/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'utils/response';
 
 @ApiTags('profiles')
 @Controller('profiles')
 export class ProfilesController {
-  constructor(private readonly profilesService: ProfilesService) {}
+  constructor(
+    private readonly profilesService: ProfilesService,
+    private readonly messageError: MessageErrorService,
+  ) {}
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Add new profile' })
+  @ApiBody({
+    type: CreateProfileDto,
+    required: true,
+    description: 'Add new profile',
+  })
   @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profilesService.create(createProfileDto);
+  async create(
+    @Body() createProfileDto: CreateProfileDto,
+    @Request() req,
+  ): Promise<Response> {
+    try {
+      const data: any = await this.profilesService.create(
+        createProfileDto,
+        req.user,
+      );
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Create successfully',
+        data: data,
+      };
+    } catch (e) {
+      return this.messageError.messageErrorController(e);
+    }
   }
 
   @Get()

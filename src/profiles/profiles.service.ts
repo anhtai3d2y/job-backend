@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { Profiles } from './interfaces/profiles.interfaces';
 
 @Injectable()
 export class ProfilesService {
-  create(createProfileDto: CreateProfileDto) {
-    return 'This action adds a new profile';
+  constructor(
+    @InjectModel('Profiles')
+    private readonly prfilesModel: Model<Profiles>,
+  ) {}
+  async create(createProfileDto: CreateProfileDto, user: any) {
+    const profile = await this.prfilesModel.create({
+      ...createProfileDto,
+      uuid: user.uuid,
+    });
+    return profile;
   }
 
   findAll() {

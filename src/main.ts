@@ -29,6 +29,8 @@ async function bootstrap() {
     .addTag('jobs')
     .addTag('applications')
     .addTag('save-jobs')
+    .addTag('threads')
+    .addTag('messages')
 
     .addBearerAuth()
     .build();

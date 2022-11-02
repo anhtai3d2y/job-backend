@@ -5,15 +5,11 @@ import {
   IsOptional,
   IsIn,
   IsString,
-  Matches,
-  MinLength,
-  MaxLength,
   IsMongoId,
 } from 'class-validator';
 import { Currency } from 'utils/constants/enum/currency.enum';
 import { Gender } from 'utils/constants/enum/gender.enum';
 import { JobType } from 'utils/constants/enum/jobType.enum';
-import { Role } from 'utils/constants/enum/role.enum';
 export class CreateJobDto {
   @IsNotEmpty()
   @IsNumber()
