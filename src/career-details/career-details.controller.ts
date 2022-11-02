@@ -19,8 +19,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'common/guard/roles.guard';
 import { Response } from 'utils/response';
 
-@ApiTags('career-details')
-@Controller('career-details')
+@ApiTags('careerDetails')
+@Controller('careerDetails')
 export class CareerDetailsController {
   constructor(
     private readonly careerDetailsService: CareerDetailsService,
