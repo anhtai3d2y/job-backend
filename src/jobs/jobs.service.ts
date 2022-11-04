@@ -34,8 +34,9 @@ export class JobsService {
     return await this.jobsModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  async findOne(id: string) {
+    const job = await this.jobsModel.findById(id);
+    return job;
   }
 
   update(id: number, updateJobDto: UpdateJobDto) {

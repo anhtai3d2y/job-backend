@@ -19,8 +19,9 @@ export class ProfilesService {
     return profile;
   }
 
-  findAll() {
-    return `This action returns all profiles`;
+  async findAll(user) {
+    const profile = await this.prfilesModel.find({ uuid: user.uuid });
+    return profile;
   }
 
   findOne(id: number) {

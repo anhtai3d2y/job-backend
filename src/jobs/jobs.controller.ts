@@ -63,13 +63,31 @@ export class JobsController {
   }
 
   @Get()
-  async findAll() {
-    return await this.jobsService.findAll();
+  async findAll(): Promise<Response> {
+    try {
+      const data: any = await this.jobsService.findAll();
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Get successfully',
+        data: data,
+      };
+    } catch (e) {
+      return this.messageError.messageErrorController(e);
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.jobsService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Response> {
+    try {
+      const data: any = await this.jobsService.findOne(id);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Get successfully',
+        data: data,
+      };
+    } catch (e) {
+      return this.messageError.messageErrorController(e);
+    }
   }
 
   @Put(':id')

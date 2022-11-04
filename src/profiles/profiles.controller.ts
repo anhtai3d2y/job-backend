@@ -55,9 +55,21 @@ export class ProfilesController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get profile' })
   @Get()
-  findAll() {
-    return this.profilesService.findAll();
+  async findAll(@Request() req): Promise<Response> {
+    try {
+      const data: any = await this.profilesService.findAll(req.user);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Get successfully',
+        data: data,
+      };
+    } catch (e) {
+      return this.messageError.messageErrorController(e);
+    }
   }
 
   @Get(':id')
