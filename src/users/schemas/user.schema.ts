@@ -17,6 +17,10 @@ export const userSchema = new mongoose.Schema(
         'Please fill a valid email address',
       ],
     },
+    avatar: {
+      secureURL: String,
+      publicId: String,
+    },
     uuid: String,
     phonenumber: { type: String },
     role: { type: String },

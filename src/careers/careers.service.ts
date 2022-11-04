@@ -19,7 +19,21 @@ export class CareersService {
   }
 
   async findAll() {
-    const career = await this.careersModel.find();
+    const career = await this.careersModel.aggregate([
+      {
+        $addFields: {
+          id: { $toString: '$_id' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'careerdetails',
+          localField: 'id',
+          foreignField: 'careerId',
+          as: 'careerDetails',
+        },
+      },
+    ]);
     return career;
   }
 

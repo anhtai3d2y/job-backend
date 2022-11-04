@@ -23,6 +23,7 @@ async function bootstrap() {
     .addTag('permission')
     .addTag('group-permission')
     .addTag('profiles')
+    .addTag('certificates')
     .addTag('careers')
     .addTag('career-details')
     .addTag('recruiters')

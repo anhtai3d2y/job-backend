@@ -26,6 +26,7 @@ import { ApplicationsModule } from './applications/applications.module';
 import { SaveJobsModule } from './save-jobs/save-jobs.module';
 import { ThreadsModule } from './threads/threads.module';
 import { MessagesModule } from './messages/messages.module';
+import { CertificatesModule } from './certificates/certificates.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { MessagesModule } from './messages/messages.module';
     SaveJobsModule,
     ThreadsModule,
     MessagesModule,
+    CertificatesModule,
   ],
   controllers: [AppController, UserController],
   providers: [

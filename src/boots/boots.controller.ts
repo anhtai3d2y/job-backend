@@ -59,21 +59,4 @@ export class BootsController {
       return this.messageError.messageErrorController(e);
     }
   }
-
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Use boots' })
-  @Post('use-boots')
-  async useBoots(@Request() req) {
-    try {
-      const data = await this.bootsService.useBoots(req.user);
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Use boots successfully',
-        data: data,
-      };
-    } catch (e) {
-      return this.messageError.messageErrorController(e);
-    }
-  }
 }

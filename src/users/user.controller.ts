@@ -110,41 +110,41 @@ export class UserController {
     }
   }
 
-  @Get('news-feed')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get users newsfeed' })
-  async getUsersNewsfeed(
-    @Request() req,
-    @Query() filer: NewsFeedFilterDto,
-  ): Promise<Response> {
-    try {
-      const data: any = await this.userService.getUsersNewsfeed(
-        filer,
-        req.user,
-      );
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Get newsfeed successfully',
-        data: data,
-      };
-    } catch (e) {
-      const message = e.response?.message;
-      let messageError: any = message;
-      if (e.response?.error === 'ID_NOT_FOUND') {
-        messageError = message;
-      } else if (e.response?.error === 'Conflict') {
-        messageError = message;
-      } else {
-        messageError = 'A system error has occurred!';
-      }
-      return {
-        success: false,
-        message: messageError,
-        error: 'Unprocessable Entity',
-      };
-    }
-  }
+  // @Get('news-feed')
+  // @UseGuards(AuthGuard('jwt'), RolesGuard)
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: 'Get users newsfeed' })
+  // async getUsersNewsfeed(
+  //   @Request() req,
+  //   @Query() filer: NewsFeedFilterDto,
+  // ): Promise<Response> {
+  //   try {
+  //     const data: any = await this.userService.getUsersNewsfeed(
+  //       filer,
+  //       req.user,
+  //     );
+  //     return {
+  //       statusCode: HttpStatus.OK,
+  //       message: 'Get newsfeed successfully',
+  //       data: data,
+  //     };
+  //   } catch (e) {
+  //     const message = e.response?.message;
+  //     let messageError: any = message;
+  //     if (e.response?.error === 'ID_NOT_FOUND') {
+  //       messageError = message;
+  //     } else if (e.response?.error === 'Conflict') {
+  //       messageError = message;
+  //     } else {
+  //       messageError = 'A system error has occurred!';
+  //     }
+  //     return {
+  //       success: false,
+  //       message: messageError,
+  //       error: 'Unprocessable Entity',
+  //     };
+  //   }
+  // }
 
   @Get('ranking')
   @UseGuards(AuthGuard('jwt'), RolesGuard)

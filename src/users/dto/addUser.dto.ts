@@ -16,20 +16,31 @@ import { Role } from 'utils/constants/enum/role.enum';
 export class AddUserDto {
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({ type: String, description: 'name' })
+  @ApiProperty({ type: String, description: 'name', default: 'Pham Duy Tai' })
   name: string;
 
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({ type: String, description: 'email' })
+  @ApiProperty({
+    type: String,
+    description: 'email',
+    default: 'user@gmail.com',
+  })
   email: string;
 
   @IsOptional()
   @IsString()
-  @ApiProperty({ type: String, description: 'password', required: false })
+  @MinLength(6, { message: '6' })
+  @MaxLength(30, { message: '30' })
+  @ApiProperty({
+    type: String,
+    description: 'password',
+    required: false,
+    default: 'anhtai3d2y',
+  })
   password: string;
 
-  @ApiProperty({ type: String, enum: Gender, required: false })
+  @ApiProperty({ type: String, enum: Gender, required: false, default: 'Male' })
   @IsOptional()
   @IsString()
   @IsIn(Gender, { message: Gender.toString() })
@@ -37,9 +48,11 @@ export class AddUserDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(6, { message: '6' })
-  @MaxLength(30, { message: '30' })
-  @ApiProperty({ type: String, description: 'phonenumber' })
+  @ApiProperty({
+    type: String,
+    description: 'phonenumber',
+    default: '0932062686',
+  })
   phonenumber: string;
 
   @IsOptional()
@@ -57,12 +70,12 @@ export class AddUserDto {
   @ApiProperty({ type: String, description: 'birthday', default: '2000/11/27' })
   birthday: string;
 
-  // @ApiProperty({
-  //   type: String,
-  //   format: 'binary',
-  //   description: 'avatar',
-  //   required: false,
-  // })
-  // @IsOptional()
-  // avatar?: string;
+  @ApiProperty({
+    type: String,
+    format: 'binary',
+    description: 'avatar',
+    required: true,
+  })
+  @IsOptional()
+  avatar?: string;
 }

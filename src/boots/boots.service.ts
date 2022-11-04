@@ -41,37 +41,4 @@ export class BootsService {
     });
     return data;
   }
-
-  async useBoots(user) {
-    const boots = await this.bootsModel.findOne({
-      userId: user._id,
-    });
-    if (boots && boots.amount > 0) {
-      const userBoots = await this.userModel.findOne({
-        _id: user._id,
-      });
-      const bootsPlus = 30 * 60 * 1000;
-      let bootsTime;
-      if (userBoots && userBoots.boots < Date.now()) {
-        bootsTime = Date.now();
-      } else {
-        bootsTime = userBoots.boots;
-      }
-      await userBoots.updateOne({
-        boots: bootsTime + bootsPlus,
-      });
-      await boots.updateOne({
-        amount: boots.amount - 1,
-      });
-    } else {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-          message: "You don't have enough boots. Please buy more boots!",
-          error: 'Unprocessable Entity',
-        },
-        400,
-      );
-    }
-  }
 }

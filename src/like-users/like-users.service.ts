@@ -20,56 +20,56 @@ export class LikeUsersService {
     @InjectModel('User')
     private readonly userModel: Model<User>,
   ) {}
-  async create(createLikeUserDto: CreateLikeUserDto, user) {
-    const userId = user._id.toString();
-    let isMatched = false;
-    let like = await this.likeUserModel.findOne({
-      userId: userId,
-      userLikedId: createLikeUserDto.userLikedId,
-    });
-    if (!like) {
-      like = await this.likeUserModel.create({
-        userId: userId,
-        userLikedId: createLikeUserDto.userLikedId,
-      });
-    }
-    const likeMatched = await this.likeUserModel.findOne({
-      userId: createLikeUserDto.userLikedId,
-      userLikedId: userId,
-    });
-    const superlikeMatched = await this.superlikeUserModel.findOne({
-      userId: createLikeUserDto.userLikedId,
-      userSuperlikedId: userId,
-    });
-    let userName = '';
-    let userAvatar = '';
-    let otherUserAvatar = '';
-    if (likeMatched || superlikeMatched) {
-      isMatched = true;
-      await this.matchesModel.create({
-        userId: userId,
-        otherUserId: createLikeUserDto.userLikedId,
-      });
-      const user = await this.userModel.findOne({
-        _id: userId,
-      });
-      const otherUser = await this.userModel.findOne({
-        _id: createLikeUserDto.userLikedId,
-      });
-      userAvatar = user.avatar;
-      otherUserAvatar = otherUser.avatar;
-      userName = otherUser.name;
-    }
-    return {
-      userId: like.userId,
-      userLikedId: like.userLikedId,
-      _id: like._id,
-      isMatched: isMatched,
-      userName: userName,
-      userAvatar: userAvatar,
-      otherUserAvatar: otherUserAvatar,
-    };
-  }
+  // async create(createLikeUserDto: CreateLikeUserDto, user) {
+  //   const userId = user._id.toString();
+  //   let isMatched = false;
+  //   let like = await this.likeUserModel.findOne({
+  //     userId: userId,
+  //     userLikedId: createLikeUserDto.userLikedId,
+  //   });
+  //   if (!like) {
+  //     like = await this.likeUserModel.create({
+  //       userId: userId,
+  //       userLikedId: createLikeUserDto.userLikedId,
+  //     });
+  //   }
+  //   const likeMatched = await this.likeUserModel.findOne({
+  //     userId: createLikeUserDto.userLikedId,
+  //     userLikedId: userId,
+  //   });
+  //   const superlikeMatched = await this.superlikeUserModel.findOne({
+  //     userId: createLikeUserDto.userLikedId,
+  //     userSuperlikedId: userId,
+  //   });
+  //   let userName = '';
+  //   let userAvatar = '';
+  //   let otherUserAvatar = '';
+  //   if (likeMatched || superlikeMatched) {
+  //     isMatched = true;
+  //     await this.matchesModel.create({
+  //       userId: userId,
+  //       otherUserId: createLikeUserDto.userLikedId,
+  //     });
+  //     const user = await this.userModel.findOne({
+  //       _id: userId,
+  //     });
+  //     const otherUser = await this.userModel.findOne({
+  //       _id: createLikeUserDto.userLikedId,
+  //     });
+  //     userAvatar = user.avatar;
+  //     otherUserAvatar = otherUser.avatar;
+  //     userName = otherUser.name;
+  //   }
+  //   return {
+  //     userId: like.userId,
+  //     userLikedId: like.userLikedId,
+  //     _id: like._id,
+  //     isMatched: isMatched,
+  //     userName: userName,
+  //     userAvatar: userAvatar,
+  //     otherUserAvatar: otherUserAvatar,
+  //   };
+  // }
 
   async findAll(user) {
     const userId = user._id.toString();

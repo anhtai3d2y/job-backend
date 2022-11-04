@@ -5,19 +5,14 @@ export interface User extends Document {
   password: string;
   role: string;
   uuid: string;
-  avatar: string;
+  avatar: {
+    secureURL: string;
+    publicId: string;
+  };
+  birthday: string;
   phonenumber: string;
   permission: string[];
-  mylocation: {
-    latitude: number;
-    longitude: number;
-  };
-  boots: number;
   gender: string;
-  genderShow: string;
-  minAge: number;
-  maxAge: number;
-  distance: number;
   currentHashedRefreshToken: string;
   verification: {
     code: string;

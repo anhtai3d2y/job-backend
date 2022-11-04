@@ -23,33 +23,33 @@ export class SuperlikeUsersController {
     private readonly messageError: MessageErrorService,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Add new superlike' })
-  @ApiBody({
-    type: CreateSuperlikeUserDto,
-    required: true,
-    description: 'Add new superlike',
-  })
-  @Post()
-  async create(
-    @Body() createSuperlikeUserDto: CreateSuperlikeUserDto,
-    @Request() req,
-  ): Promise<Response> {
-    try {
-      const data: any = await this.superlikeUsersService.create(
-        createSuperlikeUserDto,
-        req.user,
-      );
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Create successfully',
-        data: data,
-      };
-    } catch (e) {
-      return this.messageError.messageErrorController(e);
-    }
-  }
+  // @UseGuards(AuthGuard('jwt'), RolesGuard)
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: 'Add new superlike' })
+  // @ApiBody({
+  //   type: CreateSuperlikeUserDto,
+  //   required: true,
+  //   description: 'Add new superlike',
+  // })
+  // @Post()
+  // async create(
+  //   @Body() createSuperlikeUserDto: CreateSuperlikeUserDto,
+  //   @Request() req,
+  // ): Promise<Response> {
+  //   try {
+  //     const data: any = await this.superlikeUsersService.create(
+  //       createSuperlikeUserDto,
+  //       req.user,
+  //     );
+  //     return {
+  //       statusCode: HttpStatus.OK,
+  //       message: 'Create successfully',
+  //       data: data,
+  //     };
+  //   } catch (e) {
+  //     return this.messageError.messageErrorController(e);
+  //   }
+  // }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiBearerAuth()

@@ -23,74 +23,74 @@ export class SuperlikeUsersService {
     @InjectModel('User')
     private readonly userModel: Model<User>,
   ) {}
-  async create(createSuperlikeUserDto: CreateSuperlikeUserDto, user) {
-    const userId = user._id.toString();
-    let isMatched = false;
-    let superlike = await this.superlikeUserModel.findOne({
-      userId: userId,
-      userSuperlikedId: createSuperlikeUserDto.userSuperlikedId,
-    });
-    const superlikeStar = await this.superlikeStarModel.findOne({
-      userId: userId,
-    });
-    if (superlikeStar && superlikeStar.amount > 0) {
-      if (!superlike) {
-        superlike = await this.superlikeUserModel.create({
-          userId: userId,
-          userSuperlikedId: createSuperlikeUserDto.userSuperlikedId,
-        });
-        await superlikeStar.updateOne({
-          amount: superlikeStar.amount - 1,
-        });
-      }
-      const likeMatched = await this.likeUserModel.findOne({
-        userId: createSuperlikeUserDto.userSuperlikedId,
-        userLikedId: userId,
-      });
-      const superlikeMatched = await this.superlikeUserModel.findOne({
-        userId: createSuperlikeUserDto.userSuperlikedId,
-        userSuperlikedId: userId,
-      });
-      isMatched = false;
-      let userName = '';
-      let userAvatar = '';
-      let otherUserAvatar = '';
-      if (likeMatched || superlikeMatched) {
-        isMatched = true;
-        await this.matchesModel.create({
-          userId: userId,
-          otherUserId: createSuperlikeUserDto.userSuperlikedId,
-        });
-        const user = await this.userModel.findOne({
-          _id: userId,
-        });
-        const otherUser = await this.userModel.findOne({
-          _id: createSuperlikeUserDto.userSuperlikedId,
-        });
-        userAvatar = user.avatar;
-        otherUserAvatar = otherUser.avatar;
-        userName = otherUser.name;
-      }
-      return {
-        userId: superlike.userId,
-        userLikedId: superlike.userSuperlikedId,
-        _id: superlike._id,
-        isMatched: isMatched,
-        userName: userName,
-        userAvatar: userAvatar,
-        otherUserAvatar: otherUserAvatar,
-      };
-    } else {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-          message: "You don't have enought super like star!",
-          error: 'Unprocessable Entity',
-        },
-        400,
-      );
-    }
-  }
+  // async create(createSuperlikeUserDto: CreateSuperlikeUserDto, user) {
+  //   const userId = user._id.toString();
+  //   let isMatched = false;
+  //   let superlike = await this.superlikeUserModel.findOne({
+  //     userId: userId,
+  //     userSuperlikedId: createSuperlikeUserDto.userSuperlikedId,
+  //   });
+  //   const superlikeStar = await this.superlikeStarModel.findOne({
+  //     userId: userId,
+  //   });
+  //   if (superlikeStar && superlikeStar.amount > 0) {
+  //     if (!superlike) {
+  //       superlike = await this.superlikeUserModel.create({
+  //         userId: userId,
+  //         userSuperlikedId: createSuperlikeUserDto.userSuperlikedId,
+  //       });
+  //       await superlikeStar.updateOne({
+  //         amount: superlikeStar.amount - 1,
+  //       });
+  //     }
+  //     const likeMatched = await this.likeUserModel.findOne({
+  //       userId: createSuperlikeUserDto.userSuperlikedId,
+  //       userLikedId: userId,
+  //     });
+  //     const superlikeMatched = await this.superlikeUserModel.findOne({
+  //       userId: createSuperlikeUserDto.userSuperlikedId,
+  //       userSuperlikedId: userId,
+  //     });
+  //     isMatched = false;
+  //     let userName = '';
+  //     let userAvatar = '';
+  //     let otherUserAvatar = '';
+  //     if (likeMatched || superlikeMatched) {
+  //       isMatched = true;
+  //       await this.matchesModel.create({
+  //         userId: userId,
+  //         otherUserId: createSuperlikeUserDto.userSuperlikedId,
+  //       });
+  //       const user = await this.userModel.findOne({
+  //         _id: userId,
+  //       });
+  //       const otherUser = await this.userModel.findOne({
+  //         _id: createSuperlikeUserDto.userSuperlikedId,
+  //       });
+  //       userAvatar = user.avatar;
+  //       otherUserAvatar = otherUser.avatar;
+  //       userName = otherUser.name;
+  //     }
+  //     return {
+  //       userId: superlike.userId,
+  //       userLikedId: superlike.userSuperlikedId,
+  //       _id: superlike._id,
+  //       isMatched: isMatched,
+  //       userName: userName,
+  //       userAvatar: userAvatar,
+  //       otherUserAvatar: otherUserAvatar,
+  //     };
+  //   } else {
+  //     throw new HttpException(
+  //       {
+  //         statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+  //         message: "You don't have enought super like star!",
+  //         error: 'Unprocessable Entity',
+  //       },
+  //       400,
+  //     );
+  //   }
+  // }
 
   async findAll(user) {
     const userId = user._id.toString();

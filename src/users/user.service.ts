@@ -100,84 +100,84 @@ export class UserService {
     return users;
   }
 
-  async getUsersNewsfeed(filter, user): Promise<User | any> {
-    const genderRequired = filter.gender;
-    const minAgeRequired = parseInt(filter.minAge);
-    const maxAgeRequired = parseInt(filter.maxAge);
-    const distanceRequired = parseInt(filter.distance);
+  // async getUsersNewsfeed(filter, user): Promise<User | any> {
+  //   const genderRequired = filter.gender;
+  //   const minAgeRequired = parseInt(filter.minAge);
+  //   const maxAgeRequired = parseInt(filter.maxAge);
+  //   const distanceRequired = parseInt(filter.distance);
 
-    const me = await this.userModel.findOne({ _id: user._id });
-    const myLocation = me.mylocation;
-    const userLikedIds = await this.getLikedUserIds(user);
-    const userDislikedIds = await this.getDislikedUserIds(user);
-    const userSuperlikedIds = await this.getSuperlikedUserIds(user);
-    const ids = [...userLikedIds, ...userDislikedIds, ...userSuperlikedIds].map(
-      (id) => {
-        return new ObjectID(id);
-      },
-    );
-    let users = await this.userModel.aggregate([
-      {
-        $match: {
-          _id: { $ne: user._id },
-        },
-      },
-      {
-        $match: {
-          _id: { $nin: ids },
-        },
-      },
-      {
-        $project: {
-          password: 0,
-          currentHashedRefreshToken: 0,
-          permission: 0,
-          phonenumber: 0,
-          createdAt: 0,
-          updatedAt: 0,
-          verification: 0,
-        },
-      },
-      { $addFields: { userId: { $toString: '$_id' } } },
-      {
-        $lookup: {
-          from: 'superlikeusers',
-          localField: 'userId',
-          foreignField: 'userSuperlikedId',
-          as: 'superlikes',
-        },
-      },
-      { $addFields: { superlikes: { $size: '$superlikes' } } },
-      {
-        $sort: {
-          boots: -1,
-          superlikes: -1,
-        },
-      },
-    ]);
-    users = users.filter((user) => {
-      const age = calculateAge(user.birthday);
-      user.age = age;
-      user.boots = user.boots - Date.now() < 0 ? 0 : user.boots - Date.now();
-      const distance = this.distance(
-        myLocation.latitude,
-        myLocation.longitude,
-        user.mylocation.latitude,
-        user.mylocation.longitude,
-      );
-      const isGenderOk =
-        genderRequired === 'Both' || genderRequired === user.gender;
-      const isAgeOk = age >= minAgeRequired && age <= maxAgeRequired;
-      const isDistanceOk = distance <= distanceRequired;
-      user.distance =
-        distance >= 1
-          ? Math.round(distance * 10) / 10 + ' km'
-          : Math.round(distance * 1000) + ' m';
-      return isGenderOk && isAgeOk && isDistanceOk;
-    });
-    filter.limit = 5;
-    return this.pagingService.controlPaging(users, filter);
-  }
+  //   const me = await this.userModel.findOne({ _id: user._id });
+  //   const myLocation = me.mylocation;
+  //   const userLikedIds = await this.getLikedUserIds(user);
+  //   const userDislikedIds = await this.getDislikedUserIds(user);
+  //   const userSuperlikedIds = await this.getSuperlikedUserIds(user);
+  //   const ids = [...userLikedIds, ...userDislikedIds, ...userSuperlikedIds].map(
+  //     (id) => {
+  //       return new ObjectID(id);
+  //     },
+  //   );
+  //   let users = await this.userModel.aggregate([
+  //     {
+  //       $match: {
+  //         _id: { $ne: user._id },
+  //       },
+  //     },
+  //     {
+  //       $match: {
+  //         _id: { $nin: ids },
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         password: 0,
+  //         currentHashedRefreshToken: 0,
+  //         permission: 0,
+  //         phonenumber: 0,
+  //         createdAt: 0,
+  //         updatedAt: 0,
+  //         verification: 0,
+  //       },
+  //     },
+  //     { $addFields: { userId: { $toString: '$_id' } } },
+  //     {
+  //       $lookup: {
+  //         from: 'superlikeusers',
+  //         localField: 'userId',
+  //         foreignField: 'userSuperlikedId',
+  //         as: 'superlikes',
+  //       },
+  //     },
+  //     { $addFields: { superlikes: { $size: '$superlikes' } } },
+  //     {
+  //       $sort: {
+  //         boots: -1,
+  //         superlikes: -1,
+  //       },
+  //     },
+  //   ]);
+  //   users = users.filter((user) => {
+  //     const age = calculateAge(user.birthday);
+  //     user.age = age;
+  //     user.boots = user.boots - Date.now() < 0 ? 0 : user.boots - Date.now();
+  //     const distance = this.distance(
+  //       myLocation.latitude,
+  //       myLocation.longitude,
+  //       user.mylocation.latitude,
+  //       user.mylocation.longitude,
+  //     );
+  //     const isGenderOk =
+  //       genderRequired === 'Both' || genderRequired === user.gender;
+  //     const isAgeOk = age >= minAgeRequired && age <= maxAgeRequired;
+  //     const isDistanceOk = distance <= distanceRequired;
+  //     user.distance =
+  //       distance >= 1
+  //         ? Math.round(distance * 10) / 10 + ' km'
+  //         : Math.round(distance * 1000) + ' m';
+  //     return isGenderOk && isAgeOk && isDistanceOk;
+  //   });
+  //   filter.limit = 5;
+  //   return this.pagingService.controlPaging(users, filter);
+  // }
 
   async getUsersRanking(paging, userRequest): Promise<User | any> {
     const currentYear = new Date().getFullYear();
@@ -238,36 +238,13 @@ export class UserService {
     return this.pagingService.controlPaging(users, paging);
   }
 
-  async createUser(payload: any) {
-    // const fileName = `./images/${uuid()}.png`;
-    // await fs.createWriteStream(fileName).write(file.buffer);
-    // const fileUploaded = await uploadFile(fileName);
-    // fs.unlink(fileName, (err) => {
-    //   if (err) console.log('err: ', err);
-    // });
-    const checkUuid = await axios
-      .post(uuidService.create, {
-        account: payload.email,
-        hash: payload.password,
-      })
-      .then(
-        (response) => {
-          return response.data;
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
-    if (checkUuid.error) {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.CONFLICT,
-          message: checkUuid.message,
-          error: 'Conflict',
-        },
-        409,
-      );
-    }
+  async createUser(payload: any, file: any) {
+    const fileName = `./images/${uuid()}.png`;
+    await fs.createWriteStream(fileName).write(file.buffer);
+    const fileUploaded = await uploadFile(fileName);
+    fs.unlink(fileName, (err) => {
+      if (err) console.log('err: ', err);
+    });
     const uuidRes = await axios
       .post(uuidService.create, {
         account: payload.email,
@@ -294,6 +271,10 @@ export class UserService {
     const user = await this.userModel.create({
       ...payload,
       uuid: uuidRes.data.userInfo.id,
+      avatar: {
+        secureURL: fileUploaded.secure_url,
+        publicId: fileUploaded.public_id,
+      },
     });
     const emailPassword = {
       email: payload.email,
