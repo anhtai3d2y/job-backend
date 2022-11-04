@@ -4,7 +4,7 @@ export interface Jobs extends Document {
   maxSalary: number;
   currency: string;
   salaryFrequency: string;
-  recruiterId: string;
+  recruiterName: string;
   recruitAmount: number;
   jobName: string;
   jobType: string;
@@ -19,4 +19,8 @@ export interface Jobs extends Document {
   workAddress: string;
   careerId: string;
   careerDetailId: string;
+  image: {
+    secureURL: string;
+    publicId: string;
+  };
 }

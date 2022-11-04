@@ -5,7 +5,7 @@ export const jobsSchema = new mongoose.Schema(
     maxSalary: Number,
     currency: String,
     salaryFrequency: String,
-    recruiterId: String,
+    recruiterName: String,
     recruitAmount: Number,
     jobName: String,
     jobType: String,
@@ -20,6 +20,10 @@ export const jobsSchema = new mongoose.Schema(
     workAddress: String,
     careerId: String,
     careerDetailId: String,
+    image: {
+      secureURL: String,
+      publicId: String,
+    },
   },
   { timestamps: true, versionKey: false },
 );

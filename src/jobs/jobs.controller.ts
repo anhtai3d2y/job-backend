@@ -8,15 +8,24 @@ import {
   Delete,
   UseGuards,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Response } from 'utils/response';
 import { RolesGuard } from 'common/guard/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { MessageErrorService } from 'src/message-error/message-error';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('jobs')
 @Controller('jobs')
@@ -29,15 +38,20 @@ export class JobsController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Add new job' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiBody({
     type: CreateJobDto,
     required: true,
     description: 'Add new job',
   })
   @Post()
-  async create(@Body() createJobDto: CreateJobDto): Promise<Response> {
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createJobDto: CreateJobDto,
+  ): Promise<Response> {
     try {
-      const data: any = await this.jobsService.create(createJobDto);
+      const data: any = await this.jobsService.create(createJobDto, file);
       return {
         statusCode: HttpStatus.OK,
         message: 'Create successfully',

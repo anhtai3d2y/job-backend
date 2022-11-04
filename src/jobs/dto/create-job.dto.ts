@@ -48,8 +48,12 @@ export class CreateJobDto {
   @IsOptional()
   @IsString()
   @IsMongoId()
-  @ApiProperty({ type: String, description: 'recruiterId' })
-  recruiterId: string;
+  @ApiProperty({
+    type: String,
+    description: 'recruiterName',
+    default: 'Google LLC',
+  })
+  recruiterName: string;
 
   @IsOptional()
   @IsString()
@@ -159,4 +163,13 @@ export class CreateJobDto {
     default: '63628dae864199480603ee0a',
   })
   careerDetailId: string;
+
+  @ApiProperty({
+    type: String,
+    format: 'binary',
+    description: 'image',
+    required: true,
+  })
+  @IsOptional()
+  image?: string;
 }
