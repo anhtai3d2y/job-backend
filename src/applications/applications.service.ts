@@ -35,6 +35,36 @@ export class ApplicationsService {
           from: 'jobs',
           localField: 'jobIdConverted',
           foreignField: '_id',
+          pipeline: [
+            {
+              $addFields: {
+                careerIdConverted: { $toObjectId: '$careerId' },
+                careerDetailIdConverted: { $toObjectId: '$careerDetailId' },
+              },
+            },
+            {
+              $lookup: {
+                from: 'careers',
+                localField: 'careerIdConverted',
+                foreignField: '_id',
+                as: 'careers',
+              },
+            },
+            {
+              $unwind: '$careers',
+            },
+            {
+              $lookup: {
+                from: 'careerdetails',
+                localField: 'careerDetailIdConverted',
+                foreignField: '_id',
+                as: 'careerdetails',
+              },
+            },
+            {
+              $unwind: '$careerdetails',
+            },
+          ],
           as: 'jobs',
         },
       },

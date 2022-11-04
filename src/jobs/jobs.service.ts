@@ -31,7 +31,36 @@ export class JobsService {
   }
 
   async findAll() {
-    return await this.jobsModel.find();
+    return await this.jobsModel.aggregate([
+      {
+        $addFields: {
+          careerIdConverted: { $toObjectId: '$careerId' },
+          careerDetailIdConverted: { $toObjectId: '$careerDetailId' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'careers',
+          localField: 'careerIdConverted',
+          foreignField: '_id',
+          as: 'careers',
+        },
+      },
+      {
+        $unwind: '$careers',
+      },
+      {
+        $lookup: {
+          from: 'careerdetails',
+          localField: 'careerDetailIdConverted',
+          foreignField: '_id',
+          as: 'careerdetails',
+        },
+      },
+      {
+        $unwind: '$careerdetails',
+      },
+    ]);
   }
 
   async findOne(id: string) {
