@@ -21,7 +21,27 @@ export class ApplicationsService {
   }
 
   async findAll(user: any) {
-    const application = await this.applicationsModel.find({ uuid: user.uuid });
+    const application = await this.applicationsModel.aggregate([
+      {
+        $match: { uuid: user.uuid },
+      },
+      {
+        $addFields: {
+          jobIdConverted: { $toObjectId: '$jobId' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'jobs',
+          localField: 'jobIdConverted',
+          foreignField: '_id',
+          as: 'jobs',
+        },
+      },
+      {
+        $unwind: '$jobs',
+      },
+    ]);
     return application;
   }
 
