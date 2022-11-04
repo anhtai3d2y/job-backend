@@ -20,7 +20,27 @@ export class SaveJobsService {
   }
 
   async findAll(user: any) {
-    const saveJob = await this.saveJobsModel.find({ uuid: user.uuid });
+    const saveJob = await this.saveJobsModel.aggregate([
+      {
+        $match: { uuid: user.uuid },
+      },
+      {
+        $addFields: {
+          jobIdConverted: { $toObjectId: '$jobId' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'jobs',
+          localField: 'jobIdConverted',
+          foreignField: '_id',
+          as: 'jobs',
+        },
+      },
+      {
+        $unwind: '$jobs',
+      },
+    ]);
     return saveJob;
   }
 
