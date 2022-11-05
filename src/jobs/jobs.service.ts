@@ -7,11 +7,19 @@ import { Jobs } from './interfaces/jobs.interfaces';
 import * as fs from 'fs';
 import { uuid } from 'utils/util';
 import { uploadFile } from 'utils/cloudinary';
+import { Applications } from 'src/applications/interfaces/applications.interfaces';
+import { SaveJobs } from 'src/save-jobs/interfaces/save-jobs.interfaces';
+import { ObjectID } from 'mongodb';
+
 @Injectable()
 export class JobsService {
   constructor(
     @InjectModel('Jobs')
     private readonly jobsModel: Model<Jobs>,
+    @InjectModel('Applications')
+    private readonly applicationsModel: Model<Applications>,
+    @InjectModel('SaveJobs')
+    private readonly saveJobsModel: Model<SaveJobs>,
   ) {}
   async create(createJobDto: CreateJobDto, file) {
     const fileName = `./images/${uuid()}.png`;
@@ -30,8 +38,22 @@ export class JobsService {
     return job;
   }
 
-  async findAll() {
+  async findAll(user: any) {
+    const applications = await this.applicationsModel.find({
+      uuid: user.uuid,
+    });
+    const saveJobs = await this.saveJobsModel.find({
+      uuid: user.uuid,
+    });
+    const ids = [...applications, ...saveJobs].map((item) => {
+      return new ObjectID(item.jobId);
+    });
     return await this.jobsModel.aggregate([
+      {
+        $match: {
+          _id: { $nin: ids },
+        },
+      },
       {
         $addFields: {
           careerIdConverted: { $toObjectId: '$careerId' },

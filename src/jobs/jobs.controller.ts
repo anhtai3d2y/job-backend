@@ -10,6 +10,7 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Request,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
@@ -62,10 +63,13 @@ export class JobsController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all job' })
   @Get()
-  async findAll(): Promise<Response> {
+  async findAll(@Request() req): Promise<Response> {
     try {
-      const data: any = await this.jobsService.findAll();
+      const data: any = await this.jobsService.findAll(req.user);
       return {
         statusCode: HttpStatus.OK,
         message: 'Get successfully',
